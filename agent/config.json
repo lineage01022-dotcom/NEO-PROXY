@@ -1,0 +1,5 @@
+{
+  "panel_url": "http://localhost:8001",
+  "agent_token": "dev-placeholder-agent-bearer-token-change-me",
+  "agent_url": "http://localhost:7878"
+}

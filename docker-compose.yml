@@ -1,0 +1,74 @@
+version: "3.9"
+
+# ProxyHub — single-VPS, low-RAM compose.
+# Total resident set ≈ 250-280 MB on a 2 GB Floxynet box.
+# Public URL is whatever you set PANEL_PUBLIC_URL to (e.g. http://185.146.233.197).
+# The frontend nginx also proxies /api/* to the backend, so only port 80 needs to be open.
+
+services:
+  mongo:
+    image: mongo:7-jammy
+    restart: unless-stopped
+    # Trim the WiredTiger cache hard — default is 50% of RAM (1 GB on a 2 GB box!).
+    command: ["--wiredTigerCacheSizeGB", "0.15", "--quiet", "--logpath", "/var/log/mongodb.log"]
+    deploy:
+      resources:
+        limits:
+          memory: 180M
+    mem_limit: 180m
+    mem_reservation: 100m
+    volumes:
+      - mongo_data:/data/db
+    networks: [internal]
+
+  panel-backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    environment:
+      MONGO_URL: "mongodb://mongo:27017"
+      DB_NAME: "proxy_panel"
+      CORS_ORIGINS: "${PANEL_PUBLIC_URL}"
+      JWT_SECRET: "${JWT_SECRET}"
+      ADMIN_EMAIL: "${ADMIN_EMAIL:-admin@proxy.com}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD:-password}"
+      HEALTH_CHECK_INTERVAL_SECONDS: "${HEALTH_CHECK_INTERVAL_SECONDS:-600}"
+      HEALTH_CHECK_URL: "${HEALTH_CHECK_URL:-https://api.ipify.org?format=json}"
+      HEALTH_CHECK_TIMEOUT_SECONDS: "${HEALTH_CHECK_TIMEOUT_SECONDS:-10}"
+      HEALTH_CHECK_CONCURRENCY: "${HEALTH_CHECK_CONCURRENCY:-10}"
+      PANEL_PUBLIC_URL: "${PANEL_PUBLIC_URL}"
+      WEB_CONCURRENCY: "1"  # single uvicorn worker — async, fits 60-80 MB
+    deploy:
+      resources:
+        limits:
+          memory: 140M
+    mem_limit: 140m
+    mem_reservation: 80m
+    depends_on: [mongo]
+    volumes:
+      - ./agent:/app/agent:ro
+    networks: [internal]
+
+  panel-frontend:
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_BACKEND_URL: "${PANEL_PUBLIC_URL}"
+    restart: unless-stopped
+    depends_on: [panel-backend]
+    # Only the frontend nginx is published — it also reverse-proxies /api/* to backend.
+    ports:
+      - "80:3000"
+    deploy:
+      resources:
+        limits:
+          memory: 30M
+    mem_limit: 30m
+    mem_reservation: 16m
+    networks: [internal]
+
+volumes:
+  mongo_data:
+
+networks:
+  internal:
