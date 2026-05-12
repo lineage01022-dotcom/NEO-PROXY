@@ -2,13 +2,31 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Check, ArrowRight, Zap, Sparkles, Crown, Rocket, ShieldCheck, ChevronRight,
-  Star, Globe2, Wifi, Activity, LifeBuoy, KeyRound, Boxes, Infinity as InfinityIcon,
+  Star, Globe2, Wifi, Activity, LifeBuoy, KeyRound, Boxes, Infinity as InfinityIcon, Gift,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Tiers — values 1:1 with the spec the user supplied
 // ---------------------------------------------------------------------------
 const tiers = [
+  {
+    id: "free",
+    name: "Free",
+    icon: Gift,
+    tagline: "Kick the tires",
+    monthly: 0,
+    cta: "Start free",
+    badge: null,
+    highlight: false,
+    features: [
+      { icon: Globe2,   label: "IPv6 Proxies",    value: "10" },
+      { icon: Wifi,     label: "Dedicated IPv4",  value: "—",            muted: true },
+      { icon: Boxes,    label: "Bandwidth",       value: "5 GB" },
+      { icon: Activity, label: "Health check",    value: "Every 60 min" },
+      { icon: LifeBuoy, label: "Support",         value: "Community" },
+      { icon: KeyRound, label: "API access",      value: "Basic" },
+    ],
+  },
   {
     id: "starter",
     name: "Starter",
@@ -121,11 +139,12 @@ function BillingToggle({ value, onChange }) {
 
 function PriceCard({ tier, billing }) {
   const Icon = tier.icon;
+  const isFree = tier.monthly === 0;
   const monthly = tier.monthly;
-  const effective = billing === "annual" ? +(monthly * ANNUAL_DISCOUNT).toFixed(2) : monthly;
+  const effective = billing === "annual" && !isFree ? +(monthly * ANNUAL_DISCOUNT).toFixed(2) : monthly;
   const annualTotal = +(effective * 12).toFixed(2);
   const original = +(monthly * 2).toFixed(2); // Launch sale = 50% off retail
-  const discount = Math.round(((original - monthly) / original) * 100);
+  const discount = isFree ? 0 : Math.round(((original - monthly) / original) * 100);
 
   return (
     <div
@@ -159,27 +178,38 @@ function PriceCard({ tier, billing }) {
       {/* Price block */}
       <div className="mt-7">
         <div className="flex items-end gap-1">
-          <span className="text-lg text-zinc-400 mb-3">$</span>
+          {!isFree && <span className="text-lg text-zinc-400 mb-3">$</span>}
           <span
             key={`${tier.id}-${billing}`}
             className="text-[56px] font-semibold tracking-tight leading-none tabular-nums animate-[fadeIn_0.3s_ease]"
             data-testid={`tier-${tier.id}-price`}
           >
-            {Math.floor(effective)}
-            <span className="text-3xl align-top">
-              .{(effective % 1).toFixed(2).slice(2)}
-            </span>
+            {isFree ? (
+              "$0"
+            ) : (
+              <>
+                {Math.floor(effective)}
+                <span className="text-3xl align-top">
+                  .{(effective % 1).toFixed(2).slice(2)}
+                </span>
+              </>
+            )}
           </span>
           <span className="text-sm text-zinc-400 ml-2 mb-3">/mo</span>
         </div>
 
-        <div className="mt-3 flex items-center gap-2 flex-wrap">
-          <span className="text-sm text-zinc-500 line-through tabular-nums">${original.toFixed(2)}/mo</span>
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider font-semibold">
-            {discount}% OFF · Launch
-          </span>
-        </div>
-        {billing === "annual" && (
+        {!isFree && (
+          <div className="mt-3 flex items-center gap-2 flex-wrap">
+            <span className="text-sm text-zinc-500 line-through tabular-nums">${original.toFixed(2)}/mo</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider font-semibold">
+              {discount}% OFF · Launch
+            </span>
+          </div>
+        )}
+        {isFree && (
+          <div className="mt-3 text-[11px] text-zinc-500">No credit card required</div>
+        )}
+        {billing === "annual" && !isFree && (
           <div className="mt-2 text-[11px] text-zinc-500">
             Billed annually at <span className="text-zinc-300 tabular-nums">${annualTotal.toFixed(2)}</span> · save{" "}
             <span className="text-emerald-300 font-semibold">${((monthly - effective) * 12).toFixed(2)}/yr</span>
@@ -286,7 +316,7 @@ export default function Pricing({ compact = false }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 stagger pt-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger pt-3">
             {tiers.map((t) => <PriceCard key={t.id} tier={t} billing={billing} />)}
           </div>
 

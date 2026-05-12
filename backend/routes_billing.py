@@ -37,11 +37,17 @@ async def _wallet_for(db, network: str) -> Optional[str]:
     return addresses.get(network)
 
 
+async def _wallet_qr_for(db, network: str) -> Optional[str]:
+    settings = await db.admin_settings.find_one({"_id": "global"}) or {}
+    wallets = settings.get("wallets") or {}
+    return wallets.get(f"{network}_qr")
+
+
 def _public_payment(doc: dict) -> dict:
     return {k: doc.get(k) for k in (
         "id", "plan", "billing_cycle", "network", "wallet_address",
         "amount_usdt", "tx_hash", "status", "created_at", "verified_at",
-        "explorer_url", "reject_reason",
+        "explorer_url", "reject_reason", "wallet_qr",
     )}
 
 
@@ -121,7 +127,8 @@ async def checkout(payload: CheckoutIn, user: dict = Depends(get_current_user)):
         "explorer_addr_url": info["explorer_addr"].format(addr=wallet),
     }
     await db.payments.insert_one(doc)
-    return _public_payment({**doc, "explorer_url": None})
+    qr = await _wallet_qr_for(db, payload.network)
+    return _public_payment({**doc, "explorer_url": None, "wallet_qr": qr})
 
 
 @router.post("/submit-tx")
@@ -156,9 +163,14 @@ async def list_payments(user: dict = Depends(get_current_user)):
     rows = await db.payments.find(
         {"user_id": user["id"]}, {"_id": 0},
     ).sort("created_at", -1).to_list(length=200)
+    qr_cache: dict = {}
     for r in rows:
         if r.get("tx_hash") and not r.get("explorer_url"):
             r["explorer_url"] = NETWORK_INFO[r["network"]]["explorer"].format(tx=r["tx_hash"])
+        net = r.get("network")
+        if net and net not in qr_cache:
+            qr_cache[net] = await _wallet_qr_for(db, net)
+        r["wallet_qr"] = qr_cache.get(net)
     return [_public_payment(r) for r in rows]
 
 

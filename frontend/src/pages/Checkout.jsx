@@ -16,7 +16,14 @@ function copy(value) {
   } catch { toast.error("Clipboard blocked — copy manually"); }
 }
 
-function QRBox({ data }) {
+function QRBox({ data, image }) {
+  if (image) {
+    return (
+      <div className="bg-white p-3 rounded-2xl inline-block">
+        <img alt="qr" src={image} width={200} height={200} className="block" data-testid="qr-image" />
+      </div>
+    );
+  }
   const src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(data)}&bgcolor=0b0f19&color=ffffff&margin=8`;
   return (
     <div className="bg-white p-3 rounded-2xl inline-block">

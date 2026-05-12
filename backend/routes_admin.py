@@ -44,6 +44,8 @@ class UserUpdate(BaseModel):
 class WalletSettings(BaseModel):
     trc20: Optional[str] = None
     bep20: Optional[str] = None
+    trc20_qr: Optional[str] = None  # base64 data URL of QR image (e.g. "data:image/png;base64,...")
+    bep20_qr: Optional[str] = None
 
 
 # ---------- Overview ----------
@@ -173,11 +175,12 @@ async def get_settings(_: dict = Depends(require_admin)):
 @router.put("/settings/wallets")
 async def update_wallets(payload: WalletSettings, _: dict = Depends(require_admin)):
     from server import db
-    wallets = {k: v for k, v in payload.model_dump(exclude_unset=True).items() if v is not None}
-    await db.admin_settings.update_one(
-        {"_id": "global"},
-        {"$set": {"wallets." + k: v for k, v in wallets.items()} or {}},
-        upsert=True,
-    )
+    wallets = payload.model_dump(exclude_unset=True)
+    if wallets:
+        await db.admin_settings.update_one(
+            {"_id": "global"},
+            {"$set": {"wallets." + k: v for k, v in wallets.items()}},
+            upsert=True,
+        )
     doc = await db.admin_settings.find_one({"_id": "global"}) or {}
     return {"wallets": doc.get("wallets", {})}

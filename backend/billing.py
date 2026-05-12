@@ -9,6 +9,7 @@ import httpx
 
 # Public plan catalog — mirrors the frontend Pricing page.
 PLANS = {
+    "free":    {"id": "free",    "name": "Free",    "monthly_usd": 0.0,   "ipv6_quota": 10,    "servers_quota": 1},
     "starter": {"id": "starter", "name": "Starter", "monthly_usd": 9.99,  "ipv6_quota": 100,   "servers_quota": 1},
     "pro":     {"id": "pro",     "name": "Pro",     "monthly_usd": 19.99, "ipv6_quota": 1000,  "servers_quota": 5},
     "elite":   {"id": "elite",   "name": "Elite",   "monthly_usd": 49.99, "ipv6_quota": 5000,  "servers_quota": 9999},
