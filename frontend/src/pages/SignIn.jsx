@@ -76,7 +76,7 @@ export default function SignIn() {
               onChange={(e) => setEmail(e.target.value)}
               data-testid="signin-email-input"
               className="glass-input px-4 py-3 text-sm"
-              placeholder="admin@proxy.com"
+              placeholder="you@example.com"
             />
           </div>
           <div className="flex flex-col gap-2">
