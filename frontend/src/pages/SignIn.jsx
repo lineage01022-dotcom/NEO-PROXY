@@ -136,10 +136,6 @@ export default function SignIn() {
             </button>
           </div>
         </form>
-
-        <p className="mt-6 text-center text-[11px] text-zinc-600">
-          Default admin: <span className="mono text-zinc-400">admin@proxy.com / password</span>
-        </p>
       </div>
     </div>
   );
