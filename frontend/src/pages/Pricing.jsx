@@ -4,6 +4,7 @@ import {
   Check, ArrowRight, Zap, Sparkles, Crown, Rocket, ShieldCheck, ChevronRight,
   Star, Globe2, Wifi, Activity, LifeBuoy, KeyRound, Boxes, Infinity as InfinityIcon, Gift,
 } from "lucide-react";
+import NeoLogo from "@/components/NeoLogo";
 
 // ---------------------------------------------------------------------------
 // Tiers — values 1:1 with the spec the user supplied
@@ -91,7 +92,7 @@ const competitors = [
   { name: "Oxylabs — residential",       price: "$450",   per: "/ 50 GB",   note: "metered, contract" },
   { name: "Smartproxy — datacenter",     price: "$80",    per: "/ month",   note: "100 proxies, no IPv6 rotation" },
   { name: "IPRoyal — IPv6",              price: "$1,200", per: "/ month",   note: "$1.20 / proxy × 1,000" },
-  { name: "ProxyHub Pro (you)",          price: "$19.99", per: "/ month",   note: "1,000 IPv6 proxies on your VPS", us: true },
+  { name: "NEO PROXY · Pro (you)",       price: "$19.99", per: "/ month",   note: "1,000 IPv6 proxies on your VPS", us: true },
 ];
 
 const faqs = [
@@ -279,10 +280,8 @@ export default function Pricing({ compact = false }) {
 
           <header className="relative z-10 px-6 lg:px-12 py-5 flex items-center justify-between">
             <Link to="/" className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl btn-gradient flex items-center justify-center">
-                <Zap className="w-4 h-4" />
-              </div>
-              <span className="text-base font-semibold text-gradient">ProxyHub</span>
+              <NeoLogo size={36} />
+              <span className="text-base neo-wordmark text-neon">NEO PROXY</span>
             </Link>
             <nav className="hidden md:flex items-center gap-8 text-sm text-zinc-400">
               <Link to="/" className="hover:text-white transition">Home</Link>

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Eye, EyeOff, Zap, Loader2, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Loader2, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import NeoLogo from "@/components/NeoLogo";
 
 export default function SignIn() {
   const { login, register } = useAuth();
@@ -38,11 +39,9 @@ export default function SignIn() {
           <ArrowLeft className="w-3.5 h-3.5" /> Back to home
         </Link>
         <div className="flex flex-col items-center gap-3 mb-8">
-          <div className="w-14 h-14 rounded-2xl btn-gradient flex items-center justify-center shadow-[0_10px_30px_-8px_rgba(168,85,247,0.6)]">
-            <Zap className="w-7 h-7 text-white" />
-          </div>
-          <h1 className="text-3xl font-semibold tracking-tight">
-            <span className="text-gradient">ProxyHub</span>
+          <NeoLogo size={64} />
+          <h1 className="text-3xl neo-wordmark tracking-[0.22em]">
+            <span className="text-neon">NEO PROXY</span>
           </h1>
           <p className="text-sm text-zinc-400">
             {mode === "signin" ? "Sign in to access your proxy control panel" : "Create a new account"}
@@ -136,6 +135,10 @@ export default function SignIn() {
             </button>
           </div>
         </form>
+
+        <div className="mt-6 neo-tagline text-center" data-testid="signin-powered-by">
+          Powered by <span className="neo-brand">Nexotech</span>
+        </div>
       </div>
     </div>
   );

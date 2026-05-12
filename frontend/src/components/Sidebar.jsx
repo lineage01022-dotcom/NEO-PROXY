@@ -5,12 +5,12 @@ import {
   Upload,
   Settings as SettingsIcon,
   LogOut,
-  Zap,
   Server,
   CreditCard,
   Shield,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import NeoLogo from "@/components/NeoLogo";
 
 const items = [
   { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard", testid: "nav-dashboard" },
@@ -36,11 +36,9 @@ export default function Sidebar() {
       data-testid="app-sidebar"
     >
       <div className="flex items-center gap-3 px-2 py-3 mb-2">
-        <div className="w-10 h-10 rounded-xl btn-gradient flex items-center justify-center shrink-0">
-          <Zap className="w-5 h-5 text-white" />
-        </div>
+        <NeoLogo size={40} />
         <div className="hidden lg:block">
-          <div className="text-base font-semibold text-gradient leading-none">ProxyHub</div>
+          <div className="text-base neo-wordmark text-neon leading-none" data-testid="sidebar-brand">NEO PROXY</div>
           <div className="text-[11px] text-zinc-500 mt-1">Proxy Control Panel</div>
         </div>
       </div>
@@ -105,6 +103,9 @@ export default function Sidebar() {
           <LogOut className="w-4 h-4" />
           <span className="hidden lg:inline">Sign out</span>
         </button>
+        <div className="hidden lg:block neo-tagline text-center pt-2" data-testid="sidebar-powered-by">
+          Powered by <span className="neo-brand">Nexotech</span>
+        </div>
       </div>
     </aside>
   );

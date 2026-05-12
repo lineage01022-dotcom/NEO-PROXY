@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { NavLink, Outlet, useNavigate, Navigate } from "react-router-dom";
-import { Shield, Users, Wallet, Activity, LogOut, Zap, Eye, ArrowLeft, Settings as SettingsIcon } from "lucide-react";
+import { Shield, Users, Wallet, Activity, LogOut, Eye, ArrowLeft, Settings as SettingsIcon } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import NeoLogo from "@/components/NeoLogo";
 
 const items = [
   { to: "/admin", icon: Activity, label: "Overview", end: true, testid: "admin-nav-overview" },
@@ -30,11 +31,9 @@ export default function AdminLayout() {
 
       <aside className="glass-card sticky top-0 h-screen w-[88px] lg:w-[260px] flex flex-col gap-2 p-4 lg:p-5 rounded-none lg:rounded-r-[24px] border-y-0 border-l-0" data-testid="admin-sidebar">
         <div className="flex items-center gap-3 px-2 py-3 mb-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 via-pink-500 to-purple-500 flex items-center justify-center shrink-0">
-            <Shield className="w-5 h-5 text-white" />
-          </div>
+          <NeoLogo size={40} />
           <div className="hidden lg:block">
-            <div className="text-base font-semibold text-gradient leading-none">ProxyHub</div>
+            <div className="text-base neo-wordmark text-neon leading-none" data-testid="admin-brand">NEO PROXY</div>
             <div className="text-[11px] text-red-300 mt-1 uppercase tracking-wider">Admin</div>
           </div>
         </div>
@@ -69,6 +68,9 @@ export default function AdminLayout() {
           <button onClick={handleLogout} className="flex items-center justify-center lg:justify-start gap-2 px-3 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-red-500/10 border border-transparent transition text-sm" data-testid="admin-logout">
             <LogOut className="w-4 h-4" /> <span className="hidden lg:inline">Sign out</span>
           </button>
+          <div className="hidden lg:block neo-tagline text-center pt-2" data-testid="admin-powered-by">
+            Powered by <span className="neo-brand">Nexotech</span>
+          </div>
         </div>
       </aside>
 

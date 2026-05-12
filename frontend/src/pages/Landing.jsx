@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  Zap, ShieldCheck, Globe2, Network, Activity, KeyRound, Boxes, Rocket,
-  ArrowRight, Server, Layers, Terminal, Sparkles, ChevronRight, Github, Tag,
+  ShieldCheck, Globe2, Network, Activity, KeyRound, Rocket,
+  ArrowRight, Server, Layers, Terminal, Sparkles, ChevronRight, Tag,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import Pricing from "@/pages/Pricing";
+import NeoLogo from "@/components/NeoLogo";
 
 const features = [
   { icon: Globe2, title: "IPv6 rotation engine",
@@ -69,10 +70,8 @@ export default function Landing() {
       {/* Nav */}
       <header className="relative z-10 px-6 lg:px-12 py-5 flex items-center justify-between" data-testid="landing-header">
         <Link to="/" className="flex items-center gap-3" data-testid="landing-logo">
-          <div className="w-9 h-9 rounded-xl btn-gradient flex items-center justify-center">
-            <Zap className="w-4 h-4" />
-          </div>
-          <span className="text-base font-semibold text-gradient">ProxyHub</span>
+          <NeoLogo size={36} />
+          <span className="text-base neo-wordmark text-neon">NEO PROXY</span>
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm text-zinc-400">
           <a href="#features" className="hover:text-white transition" data-testid="nav-features">Features</a>
@@ -244,16 +243,19 @@ curl -H "X-API-Key: $KEY" "https://panel.example.com/api/v1/active?format=txt"`}
 
       <footer className="relative z-10 px-6 lg:px-12 py-10 border-t border-white/5 text-xs text-zinc-500 flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
-          <div className="w-6 h-6 rounded-lg btn-gradient flex items-center justify-center">
-            <Zap className="w-3 h-3" />
-          </div>
-          <span>ProxyHub · self-hosted proxy panel</span>
+          <NeoLogo size={24} />
+          <span className="neo-wordmark text-neon">NEO PROXY</span>
+          <span className="text-zinc-600">·</span>
+          <span>self-hosted proxy panel</span>
         </div>
         <div className="flex items-center gap-5">
           <Link to="/signin" className="hover:text-white transition">Sign in</Link>
           <Link to="/pricing" className="hover:text-white transition">Pricing</Link>
           <a href="#features" className="hover:text-white transition">Features</a>
           <a href="#deploy" className="hover:text-white transition">Deploy</a>
+        </div>
+        <div className="w-full text-center neo-tagline pt-3 border-t border-white/5" data-testid="landing-powered-by">
+          Powered by <span className="neo-brand">Nexotech</span>
         </div>
       </footer>
     </div>
