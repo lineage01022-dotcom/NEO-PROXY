@@ -191,7 +191,7 @@ export default function Checkout() {
           </div>
 
           <div className="flex flex-col lg:flex-row gap-6 items-start">
-            <div className="shrink-0 self-center"><QRBox data={payment.wallet_address} /></div>
+            <div className="shrink-0 self-center"><QRBox data={payment.wallet_address} image={payment.wallet_qr} /></div>
             <div className="flex-1 flex flex-col gap-4 w-full">
               <div>
                 <div className="text-[11px] uppercase tracking-wider text-zinc-400 mb-1.5">Send to address</div>
